@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import type { Session } from "@supabase/supabase-js";
-import { supabase } from "./lib/supabase";
+import { getSupabase } from "./lib/supabase";
 
 const LAST_EMAIL_KEY = "timeclock:last-email";
 
@@ -15,6 +15,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
     const saved = localStorage.getItem(LAST_EMAIL_KEY);
     if (saved) setEmail(saved);
 
+    const supabase = getSupabase();
     supabase.auth.getSession().then(({ data }: { data: { session: Session | null } }) => {
       setSession(data.session);
       setReady(true);
@@ -34,13 +35,14 @@ export function AuthGate({ children }: { children: ReactNode }) {
 
     const password = import.meta.env.VITE_AUTH_PASSWORD;
     if (!password) {
-      setMessage("Missing VITE_AUTH_PASSWORD in environment.");
+      setMessage("App auth password is not configured on this deployment.");
       return;
     }
 
     setSubmitting(true);
     setMessage(null);
 
+    const supabase = getSupabase();
     const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
       email: trimmed,
       password,
@@ -75,7 +77,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    await getSupabase().auth.signOut();
   };
 
   if (!ready) {

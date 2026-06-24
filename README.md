@@ -40,4 +40,14 @@ Full product spec: [`docs/timeclock-handoff.md`](docs/timeclock-handoff.md).
 
 ## Deploy (Vercel)
 
-Connect repo, set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`, build command `npm run build`, output `dist`.
+Production URL: **https://hour-tracker-beta.vercel.app** (not `hour-tracker.vercel.app`).
+
+1. Connect the GitHub repo.
+2. Framework preset: **Vite** (or use `vercel.json` in repo).
+3. Add **Production** and **Preview** environment variables (required at **build** time for Vite):
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+   - `VITE_AUTH_PASSWORD` (same value as local `.env`)
+4. Redeploy after adding env vars (Vite bakes `VITE_*` into the bundle during build).
+
+Without these, the app shows a configuration notice instead of a white screen.

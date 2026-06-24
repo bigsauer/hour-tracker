@@ -1,11 +1,25 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "../types/database";
 
-const url = import.meta.env.VITE_SUPABASE_URL;
-const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-if (!url || !anonKey) {
-  throw new Error("Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY");
+export function isSupabaseConfigured(): boolean {
+  return Boolean(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY);
 }
 
-export const supabase = createClient<Database>(url, anonKey);
+export function isAuthPasswordConfigured(): boolean {
+  return Boolean(import.meta.env.VITE_AUTH_PASSWORD);
+}
+
+let client: SupabaseClient<Database> | null = null;
+
+export function getSupabase(): SupabaseClient<Database> {
+  if (!isSupabaseConfigured()) {
+    throw new Error("Supabase environment variables are not configured.");
+  }
+  if (!client) {
+    client = createClient<Database>(
+      import.meta.env.VITE_SUPABASE_URL,
+      import.meta.env.VITE_SUPABASE_ANON_KEY,
+    );
+  }
+  return client;
+}
