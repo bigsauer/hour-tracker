@@ -1,0 +1,30 @@
+# Dependencies
+node_modules
+
+# Build
+dist
+dist-ssr
+*.local
+
+# Env (never commit secrets)
+.env
+.env.*
+!.env.example
+
+# Editor / OS
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Test
+test-results
+playwright-report
+blob-report
+playwright/.cache
+e2e/.auth
+
+# TypeScript
+*.tsbuildinfo
